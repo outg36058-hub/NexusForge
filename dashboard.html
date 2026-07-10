@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NexusForge AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0B0C10;
+            color: #ffffff;
+            display: flex;
+            height: 100vh; /* Takes up exactly 100% of the screen height */
+            overflow: hidden; /* Prevents the whole page from scrolling */
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: #121418;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #66FCF1;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            color: #C5C6C7;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(102, 252, 241, 0.1);
+            color: #66FCF1;
+        }
+
+        /* Main Content Workspace */
+        .workspace {
+            flex: 1; /* This tells the workspace to take up all remaining space */
+            background-color: #0B0C10;
+            padding: 40px 50px;
+            overflow-y: auto; /* Allows scrolling only inside the workspace */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .profile {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #66FCF1, #45A29E);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            color: #0B0C10;
+            cursor: pointer;
+        }
+
+        /* AI Input Area */
+        .ai-prompt-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(102, 252, 241, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .ai-prompt-container h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #C5C6C7;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .ai-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 18px 25px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .ai-input:focus {
+            border-color: #66FCF1;
+        }
+
+        .generate-btn {
+            background-color: #66FCF1;
+            color: #0B0C10;
+            border: none;
+            padding: 0 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            box-shadow: 0 0 20px rgba(102, 252, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Recent Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: #121418;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            border-color: rgba(102, 252, 241, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .project-status {
+            font-size: 0.85rem;
+            color: #66FCF1;
+            background: rgba(102, 252, 241, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation Layout -->
+    <div class="sidebar">
+        <div class="logo">NexusForge AI</div>
+        <div class="nav-link active">
+            <span>⚡</span> AI Workspace
+        </div>
+        <div class="nav-link">
+            <span>📁</span> My Projects
+        </div>
+        <div class="nav-link">
+            <span>⚙️</span> Settings
+        </div>
+        <div style="margin-top: auto;" class="nav-link" onclick="alert('Logging out simulation...')">
+            <span>🚪</span> Log Out
+        </div>
+    </div>
+
+    <!-- Main Workspace Layout -->
+    <div class="workspace">
+        
+        <div class="header">
+            <h1>Welcome back, Founder.</h1>
+            <div class="profile">AK</div>
+        </div>
+
+        <!-- The Core Product: AI Input -->
+        <div class="ai-prompt-container">
+            <h2>What are we building today?</h2>
+            <div class="input-group">
+                <input type="text" id="ai-command" class="ai-input" placeholder="e.g., Generate a mobile app MVP for a food delivery startup...">
+                <button class="generate-btn" onclick="startGeneration()">Generate</button>
+            </div>
+        </div>
+
+        <!-- Visual Proof of Platform Utility -->
+        <h2 style="font-size: 1.2rem; margin-bottom: 20px; color: #C5C6C7;">Recent Deployments</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-title">E-Commerce Storefront</div>
+                <div class="project-status">Deployed - 2 hours ago</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Fitness Tracker iOS App</div>
+                <div class="project-status">Draft - 1 day ago</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Brain (JavaScript Logic) -->
+    <script>
+        function startGeneration() {
+            // 1. Get whatever the user typed into the box
+            const input = document.getElementById('ai-command').value;
+            
+            // 2. Prevent empty clicks
+            if(input.trim() === '') {
+                alert('Please enter a command for the AI.');
+                return;
+            }
+            
+            // 3. Grab the button to change its text during "processing"
+            const btn = document.querySelector('.generate-btn');
+            const originalText = btn.innerText;
+            
+            // 4. Simulate a backend loading state
+            btn.innerText = 'Compiling Code...';
+            btn.style.backgroundColor = '#45A29E';
+            
+            // 5. Use setTimeout to create artificial delay (feels like real AI generation)
+            setTimeout(() => {
+                btn.innerText = 'Deploying...';
+                
+                setTimeout(() => {
+                    alert('Simulation Complete: "' + input + '" has been processed by NexusForge AI.');
+                    // Reset everything back to normal
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = '#66FCF1';
+                    document.getElementById('ai-command').value = '';
+                }, 1500);
+                
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>

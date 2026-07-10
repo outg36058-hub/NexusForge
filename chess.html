@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusForge Chess Engine</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0B0C10;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #66FCF1;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: #C5C6C7;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* The Chess Board Container */
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 70px);
+            grid-template-rows: repeat(8, 70px);
+            border: 4px solid #1f2833;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Individual Squares */
+        .square {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+            cursor: pointer;
+            user-select: none; /* Prevents text highlighting when clicking fast */
+            transition: background-color 0.2s;
+        }
+
+        /* Board Colors */
+        .light {
+            background-color: #C5C6C7;
+            color: #0B0C10; /* Dark pieces on light squares */
+        }
+
+        .dark {
+            background-color: #45A29E;
+            color: #0B0C10; /* Dark pieces on dark squares */
+        }
+
+        /* Highlight when a piece is clicked */
+        .selected {
+            background-color: #66FCF1 !important;
+        }
+
+        .status-bar {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: #C5C6C7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NexusForge Chess</h1>
+        <p>Interactive Tactics Board</p>
+    </div>
+
+    <!-- The empty board div that JavaScript will fill -->
+    <div id="chessboard"></div>
+
+    <div class="status-bar" id="status">Select a piece to move.</div>
+
+    <script>
+        // 1. Define the starting positions using a 2D Array
+        const initialBoard = [
+            ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+            ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+            ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+        ];
+
+        const boardElement = document.getElementById('chessboard');
+        const statusElement = document.getElementById('status');
+        
+        let selectedSquare = null;
+
+        // 2. Function to generate the board visually
+        function createBoard() {
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    
+                    // Create a div for every square
+                    const square = document.createElement('div');
+                    square.classList.add('square');
+                    
+                    // Math logic to alternate dark and light squares
+                    if ((row + col) % 2 === 0) {
+                        square.classList.add('light');
+                    } else {
+                        square.classList.add('dark');
+                    }
+
+                    // Assign an ID so we know exactly which coordinate this is (e.g., "square-0-0")
+                    square.id = `square-${row}-${col}`;
+                    
+                    // Put the piece on the square
+                    square.innerText = initialBoard[row][col];
+                    
+                    // Add click listening logic
+                    square.addEventListener('click', () => handleSquareClick(square, row, col));
+                    
+                    // Attach it to the main board
+                    boardElement.appendChild(square);
+                }
+            }
+        }
+
+        // 3. The Brain: Logic for picking up and moving pieces
+        function handleSquareClick(clickedSquare, row, col) {
+            // Case A: We already selected a piece, and now we are clicking where to move it
+            if (selectedSquare) {
+                // Move the piece visually
+                clickedSquare.innerText = selectedSquare.innerText;
+                
+                // Empty the old square
+                selectedSquare.innerText = '';
+                
+                // Remove the glowing highlight
+                selectedSquare.classList.remove('selected');
+                
+                // Reset selection
+                selectedSquare = null;
+                statusElement.innerText = "Piece moved. Select next piece.";
+            } 
+            // Case B: We haven't selected anything yet, and we clicked a square WITH a piece on it
+            else if (clickedSquare.innerText !== '') {
+                selectedSquare = clickedSquare;
+                clickedSquare.classList.add('selected');
+                statusElement.innerText = "Target square selected. Click where to move.";
+            }
+        }
+
+        // 4. Start the engine
+        createBoard();
+    </script>
+
+</body>
+</html>
