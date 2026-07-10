@@ -6,7 +6,10 @@
     <title>Dashboard | NexusForge AI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+        .sidebar a {
+    text-decoration: none;
+    color: inherit;
+}
         * {
             margin: 0;
             padding: 0;
@@ -18,8 +21,8 @@
             background-color: #0B0C10;
             color: #ffffff;
             display: flex;
-            height: 100vh; /* Takes up exactly 100% of the screen height */
-            overflow: hidden; /* Prevents the whole page from scrolling */
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* Sidebar Navigation */
@@ -62,10 +65,10 @@
 
         /* Main Content Workspace */
         .workspace {
-            flex: 1; /* This tells the workspace to take up all remaining space */
+            flex: 1;
             background-color: #0B0C10;
             padding: 40px 50px;
-            overflow-y: auto; /* Allows scrolling only inside the workspace */
+            overflow-y: auto;
         }
 
         .header {
@@ -95,12 +98,12 @@
 
         /* AI Input Area */
         .ai-prompt-container {
-            background: rgba(255, 255, 255, 0.03);
+            background: linear-gradient(145deg, #121418, #0B0C10);
             border: 1px solid rgba(102, 252, 241, 0.2);
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .ai-prompt-container h2 {
@@ -123,11 +126,12 @@
             color: #ffffff;
             font-size: 1rem;
             outline: none;
-            transition: border 0.3s;
+            transition: all 0.3s ease;
         }
 
         .ai-input:focus {
             border-color: #66FCF1;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.1);
         }
 
         .generate-btn {
@@ -140,11 +144,26 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .generate-btn:hover {
             box-shadow: 0 0 20px rgba(102, 252, 241, 0.4);
             transform: translateY(-2px);
+        }
+
+        /* Loading Animation Class */
+        .loading {
+            background-color: #45A29E !important;
+            pointer-events: none;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
         }
 
         /* Recent Projects Grid */
@@ -161,11 +180,15 @@
             padding: 25px;
             transition: all 0.3s ease;
             cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block; /* Required for a tag to act like a card */
         }
 
         .project-card:hover {
-            border-color: rgba(102, 252, 241, 0.3);
+            border-color: rgba(102, 252, 241, 0.4);
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
         .project-title {
@@ -182,91 +205,98 @@
             border-radius: 5px;
             display: inline-block;
         }
+
+        /* Dynamic Status Color for "Generating" */
+        .status-generating {
+            color: #fca311;
+            background: rgba(252, 163, 17, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Navigation Layout -->
     <div class="sidebar">
-        <div class="logo">NexusForge AI</div>
-        <div class="nav-link active">
-            <span>⚡</span> AI Workspace
-        </div>
-        <div class="nav-link">
-            <span>📁</span> My Projects
-        </div>
-        <div class="nav-link">
-            <span>⚙️</span> Settings
-        </div>
-        <div style="margin-top: auto;" class="nav-link" onclick="alert('Logging out simulation...')">
-            <span>🚪</span> Log Out
-        </div>
-    </div>
+    <div class="logo">NexusForge AI</div>
+    <a href="dashboard.html" class="nav-link active"><span>⚡</span> AI Workspace</a>
+    <a href="projects.html" class="nav-link"><span>📁</span> My Projects</a>
+    <a href="settings.html" class="nav-link"><span>⚙️</span> Settings</a>
+</div>
 
-    <!-- Main Workspace Layout -->
     <div class="workspace">
-        
         <div class="header">
             <h1>Welcome back, Founder.</h1>
             <div class="profile">AK</div>
         </div>
 
-        <!-- The Core Product: AI Input -->
         <div class="ai-prompt-container">
             <h2>What are we building today?</h2>
             <div class="input-group">
-                <input type="text" id="ai-command" class="ai-input" placeholder="e.g., Generate a mobile app MVP for a food delivery startup...">
-                <button class="generate-btn" onclick="startGeneration()">Generate</button>
+                <input type="text" id="ai-command" class="ai-input" placeholder="e.g., Generate a crypto trading dashboard...">
+                <button class="generate-btn" id="gen-btn" onclick="startGeneration()">Generate Code</button>
             </div>
         </div>
 
-        <!-- Visual Proof of Platform Utility -->
         <h2 style="font-size: 1.2rem; margin-bottom: 20px; color: #C5C6C7;">Recent Deployments</h2>
-        <div class="projects-grid">
+        
+        <div class="projects-grid" id="grid">
+            
+            <a href="chess.html" class="project-card">
+                <div class="project-title">Chess Tactics Engine</div>
+                <div class="project-status">Deployed - Live</div>
+            </a>
+
             <div class="project-card">
                 <div class="project-title">E-Commerce Storefront</div>
                 <div class="project-status">Deployed - 2 hours ago</div>
             </div>
-            <div class="project-card">
-                <div class="project-title">Fitness Tracker iOS App</div>
-                <div class="project-status">Draft - 1 day ago</div>
-            </div>
         </div>
     </div>
-
-    <!-- The Brain (JavaScript Logic) -->
-    <script>
+<script>
         function startGeneration() {
-            // 1. Get whatever the user typed into the box
-            const input = document.getElementById('ai-command').value;
+            const inputField = document.getElementById('ai-command');
+            const promptText = inputField.value;
+            const btn = document.getElementById('gen-btn');
+            const grid = document.getElementById('grid');
             
-            // 2. Prevent empty clicks
-            if(input.trim() === '') {
-                alert('Please enter a command for the AI.');
+            if(promptText.trim() === '') {
+                alert('Please enter a command.');
                 return;
             }
             
-            // 3. Grab the button to change its text during "processing"
-            const btn = document.querySelector('.generate-btn');
             const originalText = btn.innerText;
+            btn.innerText = 'Compiling Architecture...';
+            btn.classList.add('loading');
             
-            // 4. Simulate a backend loading state
-            btn.innerText = 'Compiling Code...';
-            btn.style.backgroundColor = '#45A29E';
-            
-            // 5. Use setTimeout to create artificial delay (feels like real AI generation)
             setTimeout(() => {
-                btn.innerText = 'Deploying...';
+                btn.innerText = 'Deploying Servers...';
                 
                 setTimeout(() => {
-                    alert('Simulation Complete: "' + input + '" has been processed by NexusForge AI.');
-                    // Reset everything back to normal
+                    // VISUAL: Build the card
+                    const newCard = document.createElement('div');
+                    newCard.className = 'project-card';
+                    newCard.innerHTML = `
+                        <div class="project-title">${promptText}</div>
+                        <div class="project-status status-generating">Just Created - Draft</div>
+                    `;
+                    grid.prepend(newCard);
+                    newCard.scrollIntoView({ behavior: 'smooth' });
+
+                    // MEMORY: Save to localStorage
+                    let savedProjects = JSON.parse(localStorage.getItem('nexusProjects')) || [];
+                    savedProjects.unshift({
+                        title: promptText,
+                        status: 'Draft - Created Today'
+                    });
+                    localStorage.setItem('nexusProjects', JSON.stringify(savedProjects));
+
+                    // Reset UI
+                    btn.classList.remove('loading');
                     btn.innerText = originalText;
-                    btn.style.backgroundColor = '#66FCF1';
-                    document.getElementById('ai-command').value = '';
-                }, 1500);
+                    inputField.value = '';
+                    
+                }, 2000); 
                 
-            }, 1500);
+            }, 1500); 
         }
     </script>
 
